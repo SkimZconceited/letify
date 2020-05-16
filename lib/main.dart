@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-//main
+//main function
 void main() {
   runApp(MyApp());
 }
