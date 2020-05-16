@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "767262722012",
+    "firebase_url": "https://letify.firebaseio.com",
+    "project_id": "letify",
+    "storage_bucket": "letify.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767262722012:android:010219f24b04267638b119",
+        "android_client_info": {
+          "package_name": "com.letify.letify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "767262722012-ld36k5qlh3lms13uo9n6vnb08r44m4a4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNQqevksq9KwPAENi326moWnqaLZFjXAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "767262722012-ld36k5qlh3lms13uo9n6vnb08r44m4a4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
