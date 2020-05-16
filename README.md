@@ -1,6 +1,6 @@
 # letify
 
-A new Flutter project.
+Quicker and easier way to find a home.
 
 ## Getting Started
 
