@@ -55,19 +55,22 @@ class UserBloc extends Object with Validator {
   Function(String) get usernameSink => _username.sink.add;
   Function(String) get confirmPasswordSink => _confirmPassword.sink.add;
 
-  //user registration
+  //user registration with email and password
   Future<User> registerWithEmailAndPassword() async {
-    final User user = await _authService.registerWithEmailAndPassword(
+    //user from ui
+    User user = User(
         name: _name.value,
         phone: _phone.value,
         email: _email.value,
         password: _password.value,
         username: _username.value);
+    //register user
+    User authUser = await _authService.registerWithEmailAndPassword(user);
     //store user to database
-    if (user != null) {
-      await _repository.createUser(user);
+    if (authUser != null) {
+      await _repository.createUser(authUser);
       print("${_username.value} and ${_password.value}");
-      return user;
+      return authUser;
     }
     return null;
   }
@@ -89,9 +92,10 @@ class UserBloc extends Object with Validator {
 
   //user log in
   Future<User> signInWithEmailAndPassword() async {
-    return await _authService.signInWithEmailAndPassword(
-        _email.value, _password.value);
-    //set fields to empty strings
+    //user from ui
+    User user = User(email: _email.value, password: _password.value);
+    //log in user
+    return await _authService.signInWithEmailAndPassword(user);
   }
 
   //user log out

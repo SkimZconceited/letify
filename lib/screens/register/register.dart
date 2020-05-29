@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:letify/services/blocs/user_provider.dart';
 import 'package:letify/widgets/auth_api.dart';
-import 'package:letify/widgets/name_field.dart';
-import 'package:letify/widgets/email_field.dart';
-import 'package:letify/widgets/phone_field.dart';
 import 'continue_button.dart';
 import 'package:letify/widgets/auth_row.dart';
+import 'package:letify/widgets/build_field.dart';
+import 'package:letify/widgets/auth_container.dart';
 
 class Register extends StatefulWidget {
   //switch up between login and register
@@ -57,46 +56,61 @@ class _RegisterState extends State<Register> {
       child: Column(
         children: [
           //letify text
-          Container(
+          AuthContainer(
             alignment: Alignment.topCenter,
             padding: EdgeInsets.only(top: 100, bottom: 50),
-            child: Text(
-              'LETIFY',
-              style:
-                  Theme.of(context).textTheme.headline5.copyWith(fontSize: 30),
-            ),
+            text: "LETIFY",
+            style: Theme.of(context).textTheme.headline5.copyWith(fontSize: 30),
           ),
           //register in text
-          Container(
+          AuthContainer(
             alignment: Alignment.topLeft,
             padding: EdgeInsets.only(top: 10, left: 40),
-            child: Text(
-              'Sign up',
-              style:
-                  Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 18),
-            ),
+            text: "Sign up",
+            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 18),
           ),
-          //form
+          //sign up form
           Form(
             key: _formKey,
             child: Column(children: [
               //fullname field
-              buildNameField(
-                bloc: bloc,
-                context: context,
-                controller: nameController,
+              Padding(
+                padding: const EdgeInsets.only(top: 20, right: 40, left: 40),
+                child: buildfield(
+                    stream: bloc.name,
+                    sink: bloc.nameSink,
+                    context: context,
+                    controller: nameController,
+                    obscure: false,
+                    labelText: 'full name',
+                    textInputType: null,
+                    icon: Icons.perm_identity),
               ),
               //phone number field
-              buildPhoneField(
-                bloc: bloc,
-                context: context,
-                controller: phoneController,
+              Padding(
+                padding: const EdgeInsets.only(top: 8, right: 40, left: 40),
+                child: buildfield(
+                    stream: bloc.phone,
+                    sink: bloc.phoneSink,
+                    context: context,
+                    controller: phoneController,
+                    obscure: false,
+                    labelText: 'phone number',
+                    textInputType: TextInputType.number,
+                    icon: Icons.phone),
               ),
               //email field
-              buildEmailField(
-                bloc: bloc,
-                context: context,
-                controller: emailController,
+              Padding(
+                padding: const EdgeInsets.only(top: 8, right: 40, left: 40),
+                child: buildfield(
+                    stream: bloc.email,
+                    sink: bloc.emailSink,
+                    context: context,
+                    controller: emailController,
+                    obscure: false,
+                    labelText: 'email',
+                    textInputType: TextInputType.emailAddress,
+                    icon: Icons.email),
               ),
               //continue button
               buildContinueButton(
@@ -105,9 +119,10 @@ class _RegisterState extends State<Register> {
                 clearText: clearText,
               ),
               //or text
-              Padding(
+              AuthContainer(
+                alignment: null,
                 padding: EdgeInsets.all(10),
-                child: Text('or'),
+                text: 'or',
               ),
               //sign up with and sign up api's
               buildAuthApi(context: context, text: 'Sign up with'),

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:letify/widgets/indicator.dart';
 import 'package:letify/models/user.dart';
-import 'package:letify/widgets/username_field.dart';
-import 'package:letify/widgets/password_field.dart';
-import 'package:letify/widgets/confirm_password_field.dart';
 import 'package:letify/services/blocs/user_provider.dart';
 import 'package:letify/utils/theme.dart';
 import 'signup_button.dart';
+import 'package:letify/widgets/build_field.dart';
+import 'package:letify/widgets/auth_container.dart';
 
 class Continue extends StatefulWidget {
   @override
@@ -59,34 +58,55 @@ class _ContinueState extends State<Continue> {
             child: Column(
             children: [
               //Almost done
-              Container(
+              AuthContainer(
                 alignment: Alignment.topCenter,
-                padding: EdgeInsets.only(top: 140, bottom: 50),
-                child: Text(
-                  'Almost done!!',
-                  style: Theme.of(context).textTheme.headline6,
-                ),
+                padding: EdgeInsets.only(top: 140, bottom: 40),
+                text: 'Almost done!!',
+                style: Theme.of(context).textTheme.headline6,
               ),
               //continue form
               Form(
                 key: _formKey,
                 child: Column(children: [
                   //username field
-                  buildUsernameField(
-                    bloc: bloc,
-                    context: context,
-                    controller: usernameController,
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 20, right: 40, left: 40),
+                    child: buildfield(
+                        stream: bloc.username,
+                        sink: bloc.usernameSink,
+                        context: context,
+                        controller: usernameController,
+                        obscure: false,
+                        labelText: 'username',
+                        textInputType: null,
+                        icon: Icons.perm_identity),
                   ),
                   //password field
-                  buildPasswordField(
-                      bloc: bloc,
-                      context: context,
-                      controller: passwordController),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, right: 40, left: 40),
+                    child: buildfield(
+                        stream: bloc.password,
+                        sink: bloc.passwordSink,
+                        context: context,
+                        controller: passwordController,
+                        obscure: true,
+                        labelText: 'password',
+                        textInputType: null,
+                        icon: Icons.enhanced_encryption),
+                  ),
                   //confirm password field
-                  buildConfirmPasswordField(
-                    bloc: bloc,
-                    context: context,
-                    controller: confirmPasswordController,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, right: 40, left: 40),
+                    child: buildfield(
+                        stream: bloc.confirmPassword,
+                        sink: bloc.confirmPasswordSink,
+                        context: context,
+                        controller: confirmPasswordController,
+                        obscure: true,
+                        labelText: 'confirm password',
+                        textInputType: null,
+                        icon: Icons.enhanced_encryption),
                   ),
                   //Register button
                   buildSignUpButton(
@@ -94,12 +114,12 @@ class _ContinueState extends State<Continue> {
                     signUp: signUp,
                   ),
                   //error text
-                  Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        error,
-                        style: TextStyle(color: letifyPink),
-                      )),
+                  AuthContainer(
+                    alignment: null,
+                    padding: EdgeInsets.all(10),
+                    text: error,
+                    style: TextStyle(color: letifyPink),
+                  ),
                 ]),
               ),
             ],
