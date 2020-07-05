@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:letify/utils/theme.dart';
 
-Widget buildIndicator() {
-  return Center(
-    child: CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation<Color>(letifyGreen),
-    ),
-  );
+class LetifyCircularProgressIndicator extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(letifyGreen),
+      ),
+    );
+  }
 }

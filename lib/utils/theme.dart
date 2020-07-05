@@ -4,12 +4,13 @@ ThemeData _themeData = ThemeData.light();
 
 ThemeData buildTheme() {
   return _themeData.copyWith(
-      primaryColor: letifyWhite,
-      textTheme: _textTheme,
-      buttonTheme: ButtonThemeData(),
-      buttonColor: letifyPink,
-      scaffoldBackgroundColor: letifyWhite,
-      iconTheme: IconThemeData(color: letifyBlack, size: 24.0));
+    primaryColor: letifyWhite,
+    textTheme: _textTheme,
+    buttonTheme: ButtonThemeData(),
+    buttonColor: letifyPink,
+    scaffoldBackgroundColor: letifyWhite,
+    iconTheme: IconThemeData(color: letifyBlack, size: 24.0),
+  );
 }
 
 TextTheme _textTheme = _themeData.textTheme.copyWith(

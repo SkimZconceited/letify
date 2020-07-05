@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:letify/services/blocs/user_bloc.dart';
 
-Widget buildAuthApi({BuildContext context, String text}) {
+Widget buildAuthApi({BuildContext context, String text, UserBloc userBloc}) {
   return Row(children: [
     Container(
         padding: EdgeInsets.only(left: 40, right: 125),
@@ -16,7 +17,9 @@ Widget buildAuthApi({BuildContext context, String text}) {
         height: 30,
         child: Image.asset('assets/images/google-logo.png'),
       ),
-      onTap: () {},
+      onTap: () async {
+        await userBloc.signInWithGoogle();
+      },
     ),
     //facebook logo
     GestureDetector(

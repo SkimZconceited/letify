@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:letify/screens/login/login.dart';
-import 'package:letify/screens/register/register.dart';
+import 'package:letify/screens/signin/signin.dart';
+import 'package:letify/screens/signup/signup.dart';
 
 class Authenticate extends StatefulWidget {
   @override
@@ -16,10 +16,10 @@ class _AuthenticateState extends State<Authenticate> {
   @override
   Widget build(BuildContext context) {
     return showSignIn
-        ? Login(
+        ? SignIn(
             toggleView: toggleView,
           )
-        : Register(
+        : SignUp(
             toggleView: toggleView,
           );
   }

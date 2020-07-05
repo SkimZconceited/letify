@@ -1,6 +1,5 @@
 import 'package:letify/services/blocs/user_validators.dart';
 import 'package:letify/services/repository.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:letify/services/auth.dart';
 import 'package:letify/models/user.dart';
 import 'dart:async';
@@ -9,70 +8,48 @@ class UserBloc extends Object with Validator {
   //declare instances
   final AuthService _authService = AuthService();
   final Repository _repository = Repository();
-  String error;
-  //user field streams
-  final _name = BehaviorSubject<String>();
-  final _email = BehaviorSubject<String>();
-  final _password = BehaviorSubject<String>();
-  final _phone = BehaviorSubject<String>();
-  final _username = BehaviorSubject<String>();
-  final _confirmPassword = BehaviorSubject<String>();
-  final _loginStream = StreamController<bool>.broadcast();
-  final _registerStream = StreamController<bool>.broadcast();
-  final _continueStream = StreamController<bool>.broadcast();
-
-  //user field streams and validators
-  Stream<String> get name => _name.stream.transform(nameValidator);
-  Stream<String> get email => _email.stream.transform(emailValidator);
-  Stream<String> get password => _password.stream.transform(passwordValidator);
-  Stream<String> get phone => _phone.stream.transform(phoneValidator);
-  Stream<String> get username => _username.stream.transform(usernameValidator);
-  Stream<String> get confirmPassword =>
-      _confirmPassword.transform(confirmPasswordValidator());
-  Stream<bool> get loginStream => _loginStream.stream;
-  Stream<bool> get registerStream => _registerStream.stream;
-  Stream<bool> get continueStream => _continueStream.stream;
-
-  //initialize streams
-  UserBloc() {
-    Rx.combineLatest2(email, password, (a, b) => true).pipe(_loginStream);
-    Rx.combineLatest3(name, phone, email, (a, b, c) => true)
-        .pipe(_continueStream);
-    Rx.combineLatest3(username, password, confirmPassword, (a, b, c) => true)
-        .pipe(_registerStream);
-  }
+  //check if signed with google
+  bool _google = false;
 
   //listen to auth changes
   Stream<User> get user {
     return _authService.user;
   }
 
-  //user field sinks
-  Function(String) get nameSink => _name.sink.add;
-  Function(String) get emailSink => _email.sink.add;
-  Function(String) get passwordSink => _password.sink.add;
-  Function(String) get phoneSink => _phone.sink.add;
-  Function(String) get usernameSink => _username.sink.add;
-  Function(String) get confirmPasswordSink => _confirmPassword.sink.add;
-
   //user registration with email and password
-  Future<User> registerWithEmailAndPassword() async {
-    //user from ui
-    User user = User(
-        name: _name.value,
-        phone: _phone.value,
-        email: _email.value,
-        password: _password.value,
-        username: _username.value);
-    //register user
-    User authUser = await _authService.registerWithEmailAndPassword(user);
-    //store user to database
-    if (authUser != null) {
-      await _repository.createUser(authUser);
-      print("${_username.value} and ${_password.value}");
-      return authUser;
+  Future<User> registerWithEmailAndPassword(User user) async {
+    try {
+      //register user
+      User _authUser = await _authService.registerWithEmailAndPassword(user);
+      //store user to database
+      if (_authUser != null) {
+        await _repository.createUser(_authUser);
+        //print("${_authUser.password} and ${_authUser.password}");
+      }
+      return _authUser;
+    } catch (e) {
+      print(e.toString());
+      return null;
     }
-    return null;
+  }
+
+  //user sign in with google account
+  Future<User> signInWithGoogle() async {
+    try {
+      _google = true;
+      User _authUser = await _authService.signInWithGoogle();
+      //check if user is in database
+      final Map<String, dynamic> userDocument =
+          await _repository.getCurrentUser(_authUser.uid);
+      //if not store user in database
+      if (userDocument == null) {
+        await _repository.createUser(_authUser);
+      }
+      return _authUser;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
   }
 
   //get current user
@@ -90,38 +67,40 @@ class UserBloc extends Object with Validator {
     return null;
   }
 
-  //user log in
-  Future<User> signInWithEmailAndPassword() async {
-    //user from ui
-    User user = User(email: _email.value, password: _password.value);
-    //log in user
-    return await _authService.signInWithEmailAndPassword(user);
+  //get user
+  Future<User> getUser(String uid) async {
+    Map<String, dynamic> userDocument = await _repository.getUser(uid);
+    return User.fromMap(userDocument);
   }
 
-  //user log out
+  //user sign in
+  Future<User> signInWithEmailAndPassword(User user) async {
+    //sign in user
+    try {
+      return await _authService.signInWithEmailAndPassword(user);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  //user sign out
   Future signOut() async {
-    return await _authService.signOut();
+    try {
+      return await _authService.signOut();
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
   }
 
-  //confirm password validator(should not be here!!!)
-  StreamTransformer<String, String> confirmPasswordValidator() =>
-      StreamTransformer<String, String>.fromHandlers(
-          handleData: (confirmPassword, sink) {
-        if (confirmPassword == _password.value)
-          sink.add(confirmPassword);
-        else
-          sink.addError('password does not match');
-      });
-  //close stream
-  dispose() {
-    _name.close();
-    _email.close();
-    _password.close();
-    _phone.close();
-    _username.close();
-    _confirmPassword.close();
-    _loginStream.close();
-    _registerStream.close();
-    _continueStream.close();
+  //reset password
+  Future<String> resetPassword(String email) async {
+    try {
+      await _authService.resetPassword(email);
+      return 'success';
+    } catch (e) {
+      return e.toString();
+    }
   }
 }

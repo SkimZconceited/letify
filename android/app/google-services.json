@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "767262722012-of6a532uplgg6uaibv0tmqk2162pppaf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letify.letify",
+            "certificate_hash": "1bd1502f482ab43ddc7f44409a22cf9413d33656"
+          }
+        },
+        {
           "client_id": "767262722012-ld36k5qlh3lms13uo9n6vnb08r44m4a4.apps.googleusercontent.com",
           "client_type": 3
         }
